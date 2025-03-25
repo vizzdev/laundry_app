@@ -1,0 +1,33 @@
+name: laundry_app_laundry
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.17
+  provider: ^6.1.2
+  google_maps_flutter: ^2.10.1
+  geolocator: ^13.0.2
+  syncfusion_flutter_sliders: ^28.2.11
+  geocoding: ^3.0.0
+  intl: ^0.20.2
+  http: ^1.3.0  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
