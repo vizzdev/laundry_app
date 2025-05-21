@@ -27,6 +27,12 @@ class MapProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set setlaundryLocation(LatLng value)
+  {
+       laundryLocation = value;
+       notifyListeners();
+  }
+
   void loadMarkers() async {
     BitmapDescriptor customIcon = await BitmapDescriptor.asset(
       ImageConfiguration(size: Size(20, 20)), // Adjust size if needed
@@ -108,7 +114,7 @@ class MapProvider extends ChangeNotifier {
   Future<void> moveCamera(LatLng position) async {
     final GoogleMapController controller = await controllermap.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: position, zoom: 14.0),
+      CameraPosition(target: position, zoom: 16.0),
     ));
   }
 

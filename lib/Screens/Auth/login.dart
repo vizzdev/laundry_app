@@ -8,7 +8,6 @@ import '../../Utils/colors.dart';
 import '../../Utils/helpers.dart';
 import '../../Widgets/background.dart';
 import '../../Widgets/inputfield.dart';
-import '../main_page.dart';
 import 'auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,6 +18,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+TextEditingController email = TextEditingController();
+TextEditingController password = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     title: "Email",
                     leftIcon: "mail.svg",
                     hintText: "Email",
+                    controller: email,
                   ),
                   SizedBox(height: 20),
                   Consumer<AuthProvider>(builder: (context, auth, child) {
@@ -60,14 +63,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       leftIcon: "lock.svg",
                       hintText: "Password",
                       rightIcon: "eye.svg",
+                      controller: password,
                       obscureText: auth.obscureText,
                       maxline: 1,
                     );
                   }),
                   SizedBox(height: 30),
-                  Button(text: "Sign In",onTap: () {
-                    pushAuth(context, MainPage());
-                  },),
+                  Consumer<AuthProvider>(
+                    builder: (context, authProvider, child) {
+                      return Button(text: "Sign In",onTap: () {
+                        authProvider.signIn(context, email.text, password.text);
+                      
+                      },);
+                    }
+                  ),
                   SizedBox(height: 40),
                   RichText(
                       text: TextSpan(

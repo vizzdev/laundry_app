@@ -17,7 +17,7 @@ class Googlemaps extends StatefulWidget {
 class GooglemapsState extends State<Googlemaps> {
   static const CameraPosition initialPosition = CameraPosition(
     target: LatLng(-20.0, 80.0), // Nairobi, Kenya
-    zoom: 10.0,
+    zoom: 16.0,
   );
 
   bool isAddressFetched = false;
@@ -54,7 +54,7 @@ class GooglemapsState extends State<Googlemaps> {
                   target: data.laundryLocation != null
                       ? data.laundryLocation!
                       : data.currentLocation!,
-                  zoom: 14.0,
+                  zoom: 16.0,
                 ),
                 onMapCreated: (GoogleMapController controller) {
                   data.controllermap.complete(controller);

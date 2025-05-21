@@ -10,9 +10,7 @@ class AnayticsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 110,
-      width: 110,
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(30),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(width: 1, color: green8f),

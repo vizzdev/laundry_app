@@ -3,9 +3,13 @@ import 'package:laundry_app_laundry/Screens/notifications.dart';
 import 'package:laundry_app_laundry/Screens/Orders/orders.dart';
 import 'package:laundry_app_laundry/Screens/profile.dart';
 import 'package:laundry_app_laundry/Screens/request_screen.dart';
+import 'package:provider/provider.dart';
 import '../Utils/colors.dart';
+import '../Utils/common_provider.dart';
+import '../Utils/helpers.dart';
 import '../Widgets/background.dart';
 import '../Widgets/tab_items.dart';
+import 'Auth/auth_provider.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,6 +26,14 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    var commonProvider = Provider.of<CommonProvider>(context, listen: false);
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (token == "") {
+        token = commonProvider.token;
+      }
+      authProvider.getUser(context, commonProvider.userId);
+    });
   }
 
   @override

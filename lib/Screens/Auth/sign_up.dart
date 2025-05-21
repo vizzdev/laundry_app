@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:laundry_app_laundry/Screens/Auth/login.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/maps.dart';
@@ -10,7 +14,6 @@ import '../../Utils/helpers.dart';
 import '../../Widgets/background.dart';
 import '../../Widgets/button.dart';
 import '../../Widgets/inputfield.dart';
-import '../main_page.dart';
 import 'auth_provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -21,6 +24,23 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  File? imageFile;
+  final ImagePicker _picker = ImagePicker();
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController conFirmPassword = TextEditingController();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile =
+        await _picker.pickImage(source: source, imageQuality: 80);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -39,11 +59,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 80),
-                  Align(alignment: Alignment.center, child: ProfileImage()),
+                  Align(
+                      alignment: Alignment.center,
+                      child: ProfileImage(
+                        imagepath: imageFile?.path ?? "",
+                        onTap: () {
+                          showImagePickerOptions(context, pickGalleryImage: () {
+                            _pickImage(ImageSource.gallery);
+                          }, pickCameraImage: () {
+                            _pickImage(ImageSource.camera);
+                          });
+                        },
+                      )),
                   SizedBox(height: 10),
                   InputField(
                     title: "Name",
                     hintText: "Name",
+                    controller: name,
                   ),
                   SizedBox(height: 20),
                   Consumer<MapProvider>(builder: (context, data, child) {
@@ -69,6 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     title: "Email",
                     leftIcon: "mail.svg",
                     hintText: "Email",
+                    controller: email,
                   ),
                   SizedBox(height: 20),
                   Consumer<AuthProvider>(builder: (context, auth, child) {
@@ -87,6 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "Password",
                           rightIcon: "eye.svg",
                           obscureText: auth.obscureText,
+                          controller: password,
                           maxline: 1,
                         ),
                         SizedBox(height: 20),
@@ -103,18 +137,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "Password",
                           rightIcon: "eye.svg",
                           obscureText: auth.obscureText,
+                          controller: conFirmPassword,
                           maxline: 1,
                         ),
                       ],
                     );
                   }),
                   SizedBox(height: 30),
-                  Button(
-                    text: "Sign Up",
-                    onTap: () {
-                      pushAuth(context, MainPage());
-                    },
-                  ),
+                  Consumer2<AuthProvider, MapProvider>(
+                      builder: (context, authProvider, mapProvider, child) {
+                    return Button(
+                      text: "Sign Up",
+                      onTap: () {
+                        if (conFirmPassword.text != password.text) {
+                          showErrorBar(context, "Password must match");
+                        } else {
+                          authProvider.signUp(context,
+                              imageFile: imageFile ?? File(""),
+                              name: name.text,
+                              address: mapProvider.locationName.text,
+                              email: email.text,
+                              password: password.text,
+                              location:
+                                  mapProvider.laundryLocation ?? LatLng(0, 0));
+                        }
+                      },
+                    );
+                  }),
                   SizedBox(height: 40),
                   RichText(
                       text: TextSpan(

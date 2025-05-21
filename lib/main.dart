@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
+import 'package:laundry_app_laundry/Utils/common_provider.dart';
 import 'package:provider/provider.dart';
 import 'Screens/Auth/auth_provider.dart';
 import 'Screens/splash_screen.dart';
@@ -21,6 +22,9 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<MapProvider>(
           create: ((context) => MapProvider()),
+        ),
+        ChangeNotifierProvider<CommonProvider>(
+          create: ((context) => CommonProvider()),
         ),
          ChangeNotifierProvider<OrderProvider>(
           create: ((context) => OrderProvider()),

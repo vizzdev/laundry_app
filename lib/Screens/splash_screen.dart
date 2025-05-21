@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/get_started_screen.dart';
+import 'package:laundry_app_laundry/Screens/main_page.dart';
+import 'package:provider/provider.dart';
+import '../Utils/common_provider.dart';
 import '../Utils/helpers.dart';
 import '../Widgets/background.dart';
 
@@ -15,8 +18,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      pushAuth(context, GetStarted());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var commonProvider = Provider.of<CommonProvider>(context, listen: false);
+      Future.delayed(Duration(seconds: 2), () {
+        pushAuth(
+            context, commonProvider.token != "" ? MainPage() : GetStarted());
+      });
     });
   }
 
