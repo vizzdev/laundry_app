@@ -135,6 +135,22 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  updateFcmToken(BuildContext context, Future<String> token) async {
+    try {
+      var body = {"token": await token};
+
+      Response response = await patchCall("users/updateToken", body);
+
+      if (response.statusCode == 200) {
+        print("reponse ${response.body}");
+      } else {
+        print("error ${response.body}");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   getUser(BuildContext context, String id) {
     getCall("users", "?id=$id").then((response) {
       GetUsersModel usersModel =

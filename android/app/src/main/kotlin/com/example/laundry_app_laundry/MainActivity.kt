@@ -1,4 +1,4 @@
-package com.example.laundry_app_laundry
+package com.app.laundry_laundry
 
 import io.flutter.embedding.android.FlutterActivity
 

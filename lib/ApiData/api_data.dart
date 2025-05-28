@@ -5,11 +5,22 @@ import 'package:http/http.dart';
 import '../Utils/helpers.dart';
 
 final baseurl =
-    "https://c8a9-2407-aa80-314-dab1-f90f-65d6-36b8-75eb.ngrok-free.app/api/";
+    "https://651a-2407-aa80-314-ba57-c054-2878-8eae-93ef.ngrok-free.app/api/";
 
 Future<Response> postCall(String endpoints, Map<String, dynamic> body) async {
   print("gggg${baseurl + endpoints}");
   return await post(Uri.parse(baseurl + endpoints),
+      headers: <String, String>{
+        "authorization": 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body));
+}
+
+Future<Response> patchCall(String endpoints, Map<String, dynamic> body) async {
+  print("gggg${baseurl + endpoints}");
+  print("token ${token}");
+  return await patch(Uri.parse(baseurl + endpoints),
       headers: <String, String>{
         "authorization": 'Bearer $token',
         'Content-Type': 'application/json',

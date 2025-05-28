@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:laundry_app_laundry/Screens/Auth/auth_provider.dart';
+import 'package:laundry_app_laundry/Screens/Auth/login.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
-import 'package:laundry_app_laundry/Screens/Google%20Maps/maps.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
 import 'package:laundry_app_laundry/Widgets/anaytics_card.dart';
 import 'package:laundry_app_laundry/Widgets/review_card.dart';
@@ -21,11 +21,11 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> { 
   @override
   Widget build(BuildContext context) {
     return Consumer3<AuthProvider, MapProvider, CommonProvider>(
-        builder: (context, authProvider, mapProvider, commonProvider,child) {
+        builder: (context, authProvider, mapProvider, commonProvider, child) {
       return Background(
           body: Center(
               child: ScreenBackground(
@@ -40,22 +40,40 @@ class _ProfileState extends State<Profile> {
                     Positioned(
                       right: 0,
                       top: 50,
-                      child: GestureDetector(
-                        onTap: () {
-                          pushAuth(context,
-                              EditProfile(data: authProvider.userdata), callBack: (){
-                                authProvider.getUser(context, commonProvider.userId);
-                              });
-                        },
-                        child: Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: green8f),
-                            child: Icon(Icons.edit_rounded,
-                                size: 20, color: white)),
-                      ),
+                      child: Consumer<CommonProvider>(
+                          builder: (context, commonProvider, child) {
+                        return Row(
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  token = "";
+                                  commonProvider.setToken = "";
+
+                                  pushReplaceAuth(context, LoginScreen());
+                                },
+                                child: SvgPicture.asset(getImg("logout.svg"))),
+                            SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: () {
+                                pushAuth(context,
+                                    EditProfile(data: authProvider.userdata),
+                                    callBack: () {
+                                  authProvider.getUser(
+                                      context, commonProvider.userId);
+                                });
+                              },
+                              child: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: green8f),
+                                  child: Icon(Icons.edit_rounded,
+                                      size: 20, color: white)),
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

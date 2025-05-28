@@ -3,6 +3,7 @@ import 'package:laundry_app_laundry/Screens/notifications.dart';
 import 'package:laundry_app_laundry/Screens/Orders/orders.dart';
 import 'package:laundry_app_laundry/Screens/profile.dart';
 import 'package:laundry_app_laundry/Screens/request_screen.dart';
+import 'package:laundry_app_laundry/Utils/notification_service.dart';
 import 'package:provider/provider.dart';
 import '../Utils/colors.dart';
 import '../Utils/common_provider.dart';
@@ -26,6 +27,8 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    NotificationServices notificationServices = NotificationServices();
+    final fcmToken = notificationServices.getDeviceToken();
     var commonProvider = Provider.of<CommonProvider>(context, listen: false);
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -33,6 +36,7 @@ class _MainPageState extends State<MainPage> {
         token = commonProvider.token;
       }
       authProvider.getUser(context, commonProvider.userId);
+      authProvider.updateFcmToken(context, fcmToken);
     });
   }
 
