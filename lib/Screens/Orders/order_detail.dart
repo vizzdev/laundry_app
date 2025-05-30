@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app_laundry/Screens/Orders/get_orders_model.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Widgets/button.dart';
 import 'package:provider/provider.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import '../../Utils/colors.dart';
 import '../../Widgets/background.dart';
 import '../../Widgets/screen_background.dart';
 
 class OrderDetail extends StatefulWidget {
-  const OrderDetail({super.key});
+  final OrderData orderData;
+  const OrderDetail({super.key, required this.orderData});
 
   @override
   State<OrderDetail> createState() => _OrderDetailState();
@@ -23,90 +26,122 @@ class _OrderDetailState extends State<OrderDetail> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      orderProvider.setOrderStatus = widget.orderData.status;
+      orderProvider.setProceedOrderButtonText(context, "");
+      orderProvider.setOrderId = widget.orderData.id;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Background(
       body: ScreenBackground(
         text: "Order Details",
         showLeftIcon: true,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 30),
-              Row(
+        child: Consumer<OrderProvider>(builder: (context, orderdata, child) {
+          return VisibilityDetector(
+            onVisibilityChanged: (info) {
+              print("info...${info}");
+
+              var visiblePercentage = info.visibleFraction * 100;
+              if (visiblePercentage > 80.0) {
+                orderdata.screenVisibility = 1;
+              } else {
+                orderdata.screenVisibility = 0;
+              }
+            },
+            key: const Key('visibiltydetector'),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Order id :",
+                  SizedBox(height: 30),
+                  Row(
+                    children: [
+                      Text("Order id :",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: black,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(width: 3),
+                      Text(
+                          "#${widget.orderData.id.substring(widget.orderData.id.length - 10)}",
+                          style: TextStyle(fontSize: 16, color: black)),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Divider(color: greybd),
+                  SizedBox(height: 10),
+                  detailRow(
+                    lefttext: "Category",
+                    rightText: "${widget.orderData.category?.title}",
+                  ),
+                  detailRow(
+                    lefttext: "Items Weight",
+                    rightText: "${widget.orderData.weight} Kilo",
+                  ),
+                  detailRow(
+                      lefttext: "Pickup",
+                      rightText: widget.orderData.pickupDatetime),
+                  detailRow(
+                      lefttext: "Address",
+                      rightText: widget.orderData.pickupLocation),
+                  detailRow(
+                      lefttext: "Delivery",
+                      rightText: widget.orderData.dropoffDatetime),
+                  detailRow(
+                      lefttext: "Address",
+                      rightText: widget.orderData.dropoffLocation),
+                  SizedBox(height: 10),
+                  Divider(color: greybd),
+                  SizedBox(height: 30),
+                  Text("Tracking :",
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           color: black,
                           fontWeight: FontWeight.bold)),
-                  SizedBox(width: 3),
-                  Text("#00123FSW2",
-                      style: TextStyle(fontSize: 16, color: black)),
+                  SizedBox(height: 20),
+                  ListView.builder(
+                    padding: EdgeInsets.all(0),
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: trackOrderText.length,
+                    itemBuilder: (context, index) {
+                      return trackOrder(
+                          showbar: index == 0 ? false : true,
+                          text: trackOrderText[index],
+                          textColor: getStatusIndex(orderdata) >= index
+                              ? green8f
+                              : greybd,
+                          progressColor: getStatusIndex(orderdata) >= index
+                              ? green8f
+                              : greybd);
+                    },
+                  ),
+                  SizedBox(height: 60),
+                  Consumer<OrderProvider>(builder: (context, data, child) {
+                    return data.orderStatus != "received" ? Button(
+                      text: data.proceedOrderButtonText,
+                      onTap: () {
+                        data.setProceedOrderButtonText(
+                            context, widget.orderData.id);
+                      },
+                    ): SizedBox();
+                  })
                 ],
               ),
-              SizedBox(height: 10),
-              Divider(color: greybd),
-              SizedBox(height: 10),
-              detailRow(
-                lefttext: "Category",
-                rightText: "Wash & Iron",
-              ),
-              detailRow(
-                lefttext: "Items Weight",
-                rightText: "5 kilos",
-              ),
-              detailRow(lefttext: "Pickup", rightText: "12 Mar 2025, 10:11 PM"),
-              detailRow(
-                  lefttext: "Address",
-                  rightText: "44c Civic Center, Islamabad"),
-              detailRow(
-                  lefttext: "Delivery", rightText: "14 Mar 2025, 10:11 PM"),
-              detailRow(
-                  lefttext: "Address",
-                  rightText: "44c Civic Center, Islamabad"),
-              SizedBox(height: 10),
-              Divider(color: greybd),
-              SizedBox(height: 30),
-              Text("Tracking :",
-                  style: TextStyle(
-                      fontSize: 18, color: black, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
-              ListView.builder(
-                padding: EdgeInsets.all(0),
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: trackOrderText.length,
-                itemBuilder: (context, index) {
-                  return Consumer<OrderProvider>(
-                      builder: (context, data, child) {
-                    return trackOrder(
-                        showbar: index == 0 ? false : true,
-                        text: trackOrderText[index],
-                        progressColor: data.changeOrderStatus(index),
-                        textColor: data.changeOrderStatus(index));
-                  });
-                },
-              ),
-              SizedBox(height: 60),
-              Consumer<OrderProvider>(
-                builder: (context, data, child) {
-                  return Button(text: data.proceedOrderButtonText, onTap: () {
-                    data.setProceedOrderButtonText();
-                  },);
-                }
-              )
-            ],
-          ),
-        ),
+            ),
+          );
+        }),
       ),
-    
     );
   }
-
-
- 
 
   Widget detailRow(
       {lefttext = "LeftText",
@@ -172,5 +207,22 @@ class _OrderDetailState extends State<OrderDetail> {
         )
       ],
     );
+  }
+
+  int getStatusIndex(OrderProvider data) {
+    switch (data.orderStatus.toLowerCase()) {
+      case 'pending':
+        return 0;
+      case 'confirmed':
+        return 1;
+      case 'in-progress':
+        return 2;
+      case 'delivered':
+        return 3;
+      case 'received':
+        return 4;
+      default:
+        return 0;
+    }
   }
 }

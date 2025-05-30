@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app_laundry/Screens/Orders/get_orders_model.dart';
 import 'package:laundry_app_laundry/Widgets/button.dart';
 import 'package:laundry_app_laundry/Widgets/update_invoice_sheet.dart';
 
@@ -6,12 +7,10 @@ import '../Utils/colors.dart';
 import '../Utils/helpers.dart';
 
 class OrderCard extends StatefulWidget {
-  final String orderStatus;
   final VoidCallback onpressed;
+  final OrderData orderData;
   const OrderCard(
-      {super.key,
-      this.orderStatus = "Pending",
-      this.onpressed = defaultCallBack});
+      {super.key, this.onpressed = defaultCallBack, required this.orderData});
 
   @override
   State<OrderCard> createState() => _OrderCardState();
@@ -44,42 +43,48 @@ class _OrderCardState extends State<OrderCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "#00123FSW2",
+                  "#${widget.orderData.id.substring(widget.orderData.id.length - 10)}",
                   style: TextStyle(
                       fontSize: 12, color: black, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Wash & Iron",
+                  widget.orderData.category?.title ?? "",
                   style: TextStyle(
                       fontSize: 14, color: red, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 20),
                 detailRow(
                   lefttext: "Items Weight",
-                  rightText: "5 kilos",
+                  rightText: "${widget.orderData.weight} kilos",
                 ),
                 detailRow(
                     lefttext: "Staus",
-                    rightText: widget.orderStatus,
-                    rightTextColor: widget.orderStatus == "Completed"
-                        ? Colors.green
-                        : yellow),
+                    rightText: widget.orderData.status,
+                    rightTextColor: getStatusColor(widget.orderData.status)),
                 detailRow(
-                    lefttext: "Pickup", rightText: "12 Mar 2025, 10:11 PM"),
-                detailRow(
-                    lefttext: "Address",
-                    rightText: "44c Civic Center, Islamabad"),
-                detailRow(
-                    lefttext: "Delivery", rightText: "14 Mar 2025, 10:11 PM"),
+                    lefttext: "Pickup",
+                    rightText: widget.orderData.pickupDatetime),
                 detailRow(
                     lefttext: "Address",
-                    rightText: "44c Civic Center, Islamabad"),
+                    rightText: widget.orderData.pickupLocation),
+                detailRow(
+                    lefttext: "Delivery",
+                    rightText: widget.orderData.dropoffDatetime),
+                detailRow(
+                    lefttext: "Address",
+                    rightText: widget.orderData.dropoffLocation),
                 SizedBox(height: 10),
                 Divider(color: greybd),
+                SizedBox(height: 10),
+                detailRow(
+                    lefttext: "Sub Total",
+                    rightText: "\$${widget.orderData.invoice}"),
+                detailRow(lefttext: "Discount", rightText: "\$0.0"),
+                SizedBox(height: 10),
                 detailRow(
                     lefttext: "Total",
-                    rightText: "\$5.0",
+                    rightText: "\$${widget.orderData.invoice}",
                     leftFontSize: 18.0,
                     leftFontWeight: FontWeight.bold,
                     rightFontSize: 18.0,
@@ -142,4 +147,23 @@ class _OrderCardState extends State<OrderCard> {
       ],
     );
   }
+
+  Color getStatusColor(String status) {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return Colors.orange;
+    case 'confirmed':
+      return Colors.blue;
+    case 'in-progress':
+      return Colors.amber;
+    case 'delivered':
+      return Colors.teal;
+    case 'received':
+      return Colors.green; 
+    case 'cancel':
+      return Colors.red;
+    default:
+      return Colors.grey;
+  }
+}
 }

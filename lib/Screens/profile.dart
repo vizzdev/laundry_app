@@ -21,7 +21,7 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> { 
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Consumer3<AuthProvider, MapProvider, CommonProvider>(
@@ -45,9 +45,15 @@ class _ProfileState extends State<Profile> {
                         return Row(
                           children: [
                             GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   token = "";
                                   commonProvider.setToken = "";
+                                  var authProvider = Provider.of<AuthProvider>(
+                                      context,
+                                      listen: false);
+                                  Future<String> empty = Future.value("");
+
+                                  authProvider.updateFcmToken(context, empty);
 
                                   pushReplaceAuth(context, LoginScreen());
                                 },

@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
+import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
+import 'package:laundry_app_laundry/Screens/main_page.dart';
+import 'package:laundry_app_laundry/Utils/helpers.dart';
+import 'package:provider/provider.dart';
 
 class NotificationServices {
   AndroidNotificationChannel channel = const AndroidNotificationChannel(
@@ -56,7 +61,7 @@ class NotificationServices {
 
       if (Platform.isAndroid) {
         initLocalNotifications(context, message);
-        showNotification(message);
+        showNotification(message, context);
       }
     });
   }
@@ -82,7 +87,40 @@ class NotificationServices {
   }
 
   // function to show visible notification when app is active
-  Future<void> showNotification(RemoteMessage message) async {
+  Future<void> showNotification(
+      RemoteMessage message, BuildContext context) async {
+    print("message data ${message.data}");
+    String? type = message.data['type'];
+    
+    var orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    if (type == "requests") {
+      orderProvider.getOrdersRequest(context);
+    }
+    if (type == "order") {
+      var orderData = jsonDecode(message.data['orderData']);
+      orderProvider.getOrders(context);
+    }
+    if (orderProvider.screenVisibility == 1) {
+      if (type == "requests") {
+        showSuccessBar(
+            context, "A new order has been placed near your location.");
+      } else {
+         var orderData = jsonDecode(message.data['orderData']);
+        if (orderData["_id"] == orderProvider.orderid) {
+          print("i am innnnnnnnn");
+          if (orderData["status"] == "received") {
+            orderProvider.setOrderStatus = "received";
+            orderProvider.setProceedOrderButtonText(context, "");
+            showSuccessBar(context, "Congratulation your order is completed");
+          }
+
+          return;
+        }
+      }
+
+      return;
+    }
+
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
             channel.id.toString(), channel.name.toString(),
@@ -142,7 +180,15 @@ class NotificationServices {
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) {
-    try {} catch (e) {
+    try {
+      var orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      if (orderProvider.screenVisibility == 1) return;
+      print("message data ${message.data}");
+      String? type = message.data['type'];
+      if (type == "requests") {
+        pushAuth(context, MainPage(index: 0));
+      }
+    } catch (e) {
       print(e);
     }
   }

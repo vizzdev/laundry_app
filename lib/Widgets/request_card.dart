@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app_laundry/Screens/Orders/get_orders_model.dart';
+import 'package:laundry_app_laundry/Utils/helpers.dart';
 import 'package:laundry_app_laundry/Widgets/button.dart';
 import '../Utils/colors.dart';
 
 class RequestCard extends StatefulWidget {
-  final String orderStatus;
-  const RequestCard({super.key, this.orderStatus = "Pending"});
+  final OrderData? orderdata;
+  final VoidCallback onReject;
+  final VoidCallback onAccept;
+  const RequestCard(
+      {super.key,
+      this.orderdata,
+      this.onReject = defaultCallBack,
+      this.onAccept = defaultCallBack});
 
   @override
   State<RequestCard> createState() => _RequestCardState();
@@ -34,41 +42,57 @@ class _RequestCardState extends State<RequestCard> {
               SizedBox(height: 10),
               detailRow(
                   lefttext: "Category",
-                  rightText: "Wash & Iron",
+                  rightText: widget.orderdata?.category?.title,
                   rightTextColor: red),
               detailRow(
                 lefttext: "Items Weight",
-                rightText: "5 kilos",
+                rightText: "${widget.orderdata?.weight} kilo",
               ),
-              detailRow(lefttext: "Pickup", rightText: "12 Mar 2025, 10:11 PM"),
+              detailRow(
+                  lefttext: "Pickup",
+                  rightText: widget.orderdata?.pickupDatetime),
               detailRow(
                   lefttext: "Address",
-                  rightText: "44c Civic Center, Islamabad"),
+                  rightText: widget.orderdata?.pickupLocation),
               detailRow(
-                  lefttext: "Delivery", rightText: "14 Mar 2025, 10:11 PM"),
+                  lefttext: "Delivery",
+                  rightText: widget.orderdata?.dropoffDatetime),
               detailRow(
                   lefttext: "Address",
-                  rightText: "44c Civic Center, Islamabad"),
+                  rightText: widget.orderdata?.dropoffLocation),
               detailRow(
-                  lefttext: "Total", rightText: "\$5.0", rightTextColor: red),
-                  SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(child: Button(
+                  lefttext: "Total",
+                  rightText: "\$${widget.orderdata?.invoice}",
+                  rightTextColor: red),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Button(
                       text: "Accept",
                       height: 45,
                       fontSize: 16,
-                    )),
-                    SizedBox(width: 20),
-                    Expanded(child: Button(
-                      text: "Reject",
-                      fontColor: red,
-                      btnColor: Colors.transparent,
-                      borderWidth: 0.9,
-                      borderColor: red,
-                      height: 45,
-                      fontSize: 16,
-                    )),
-                  ],)
+                      onTap: () {
+                        widget.onAccept();
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                      child: Button(
+                    text: "Reject",
+                    fontColor: red,
+                    btnColor: Colors.transparent,
+                    borderWidth: 0.9,
+                    borderColor: red,
+                    height: 45,
+                    fontSize: 16,
+                    onTap: () {
+                      widget.onReject();
+                    },
+                  )),
+                ],
+              )
             ],
           ),
         ),
@@ -87,6 +111,7 @@ class _RequestCardState extends State<RequestCard> {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
                 child: Text(

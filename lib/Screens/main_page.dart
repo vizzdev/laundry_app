@@ -13,7 +13,8 @@ import '../Widgets/tab_items.dart';
 import 'Auth/auth_provider.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final int index;
+  const MainPage({super.key, this.index = 0});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -22,13 +23,15 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int selectedIndex = 0;
   var pages = [RequestScreen(), OrdersScreen(), Notifications(), Profile()];
-
+  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    NotificationServices notificationServices = NotificationServices();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
     final fcmToken = notificationServices.getDeviceToken();
+
     var commonProvider = Provider.of<CommonProvider>(context, listen: false);
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,6 +41,8 @@ class _MainPageState extends State<MainPage> {
       authProvider.getUser(context, commonProvider.userId);
       authProvider.updateFcmToken(context, fcmToken);
     });
+    selectedIndex = widget.index;
+    setState(() {});
   }
 
   @override
