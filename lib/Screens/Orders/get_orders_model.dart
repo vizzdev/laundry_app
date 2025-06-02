@@ -46,8 +46,8 @@ class OrderData {
   final Location? dropOfflocation;
   final String id;
   final String status;
-  final String orderBy;
-  final String receivedBy;
+  final By? orderBy;
+  final By? receivedBy;
   final Category? category;
   final String pickupLocation;
   final String pickupDatetime;
@@ -70,8 +70,9 @@ class OrderData {
           : Location.fromJson(json["dropOfflocation"]),
       id: json["_id"] ?? "",
       status: json["status"] ?? "",
-      orderBy: json["order_by"] ?? "",
-      receivedBy: json["received_by"] ?? "",
+      orderBy: json["order_by"] == null ? null : By.fromJson(json["order_by"]),
+      receivedBy:
+          json["received_by"] == null ? null : By.fromJson(json["received_by"]),
       category:
           json["category"] == null ? null : Category.fromJson(json["category"]),
       pickupLocation: json["pickup_location"] ?? "",
@@ -104,6 +105,29 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       title: json["title"] ?? "",
+    );
+  }
+}
+
+class By {
+  By({
+    required this.id,
+    required this.email,
+    required this.name,
+    required this.profileImage,
+  });
+
+  final String id;
+  final String email;
+  final String name;
+  final String profileImage;
+
+  factory By.fromJson(Map<String, dynamic> json) {
+    return By(
+      id: json["_id"] ?? "",
+      email: json["email"] ?? "",
+      name: json["name"] ?? "",
+      profileImage: json["profile_image"] ?? "",
     );
   }
 }

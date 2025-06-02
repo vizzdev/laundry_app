@@ -46,14 +46,16 @@ class _ProfileState extends State<Profile> {
                           children: [
                             GestureDetector(
                                 onTap: () async {
-                                  token = "";
-                                  commonProvider.setToken = "";
                                   var authProvider = Provider.of<AuthProvider>(
                                       context,
                                       listen: false);
                                   Future<String> empty = Future.value("");
 
-                                  authProvider.updateFcmToken(context, empty);
+                                  authProvider.updateFcmToken(context, empty,
+                                      callBack: () {
+                                    token = "";
+                                    commonProvider.setToken = "";
+                                  });
 
                                   pushReplaceAuth(context, LoginScreen());
                                 },

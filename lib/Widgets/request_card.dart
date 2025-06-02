@@ -39,7 +39,33 @@ class _RequestCardState extends State<RequestCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: Image.network(
+                          getImg(widget.orderdata?.orderBy?.profileImage ?? ""),
+                          fit: BoxFit.cover,
+                          height: 50,
+                          width: 50,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(getImg("profile.png"),
+                                fit: BoxFit.cover, height: 50, width: 50);
+                          },
+                        )),
+                  ),
+                  SizedBox(width: 8),
+                  Text("Haseeb",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: black,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Divider(),
               detailRow(
                   lefttext: "Category",
                   rightText: widget.orderdata?.category?.title,

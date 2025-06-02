@@ -135,7 +135,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  updateFcmToken(BuildContext context, Future<String> token) async {
+  updateFcmToken(BuildContext context, Future<String> token, {callBack = defaultCallBack}) async {
     try {
       var body = {"token": await token};
 
@@ -143,6 +143,7 @@ class AuthProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         print("reponse ${response.body}");
+        callBack();
       } else {
         print("error ${response.body}");
       }

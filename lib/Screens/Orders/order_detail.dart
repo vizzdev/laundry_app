@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/Orders/get_orders_model.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
+import 'package:laundry_app_laundry/Utils/helpers.dart';
 import 'package:laundry_app_laundry/Widgets/button.dart';
 import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -77,6 +78,34 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                   SizedBox(height: 10),
                   Divider(color: greybd),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.network(
+                              getImg(
+                                  widget.orderData.orderBy?.profileImage ?? ""),
+                              fit: BoxFit.cover,
+                              height: 50,
+                              width: 50,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(getImg("profile.png"),
+                                    fit: BoxFit.cover, height: 50, width: 50);
+                              },
+                            )),
+                      ),
+                      SizedBox(width: 8),
+                      Text("Haseeb",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Divider(color: greybd),
                   SizedBox(height: 10),
                   detailRow(
                     lefttext: "Category",
@@ -126,14 +155,17 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                   SizedBox(height: 60),
                   Consumer<OrderProvider>(builder: (context, data, child) {
-                    return data.orderStatus != "received" ? Button(
-                      text: data.proceedOrderButtonText,
-                      onTap: () {
-                        data.setProceedOrderButtonText(
-                            context, widget.orderData.id);
-                      },
-                    ): SizedBox();
-                  })
+                    return data.orderStatus != "received"
+                        ? Button(
+                            text: data.proceedOrderButtonText,
+                            onTap: () {
+                              data.setProceedOrderButtonText(
+                                  context, widget.orderData.id);
+                            },
+                          )
+                        : SizedBox();
+                  }),
+                  SizedBox(height: 20)
                 ],
               ),
             ),
