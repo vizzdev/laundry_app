@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_detail.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_shimmer.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../Utils/helpers.dart';
 import '../../Widgets/background.dart';
@@ -65,7 +66,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
             }
 
             return orderdata.orderData.isEmpty
-                ? Expanded(child: Center(child: Text("no orders found")))
+                ? Expanded(
+                    child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      child: Lottie.asset(getImg("orders.json")),
+                    ),
+                  ))
                 : Expanded(
                     child: ListView.builder(
                         padding: EdgeInsets.only(top: 50, bottom: 70),

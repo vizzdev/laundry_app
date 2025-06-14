@@ -60,7 +60,7 @@ class _OrderCardState extends State<OrderCard> {
                 ),
                 detailRow(
                     lefttext: "Staus",
-                    rightText: widget.orderData.status,
+                    rightText: capitalize(widget.orderData.status),
                     rightTextColor: getStatusColor(widget.orderData.status)),
                 detailRow(
                     lefttext: "Pickup",
@@ -159,11 +159,14 @@ class _OrderCardState extends State<OrderCard> {
     case 'delivered':
       return Colors.teal;
     case 'received':
-      return Colors.green; 
+      return Colors.green;
+    case 'reviewed':
+      return Colors.deepOrange;    
     case 'cancel':
       return Colors.red;
     default:
       return Colors.grey;
   }
 }
+String capitalize(String s) => s.isNotEmpty ? '${s[0].toUpperCase()}${s.substring(1)}' : s;
 }

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:laundry_app_laundry/Profile/profile_provider.dart';
 import 'package:laundry_app_laundry/Screens/Auth/auth_provider.dart';
 import 'package:laundry_app_laundry/Screens/Auth/login.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
 import 'package:laundry_app_laundry/Widgets/anaytics_card.dart';
 import 'package:laundry_app_laundry/Widgets/review_card.dart';
+import 'package:laundry_app_laundry/Widgets/shimmer_card.dart';
 import 'package:laundry_app_laundry/edit_profile.dart';
 import 'package:provider/provider.dart';
+import '../Screens/Orders/order_shimmer.dart';
 import '../Utils/colors.dart';
 import '../Utils/helpers.dart';
+import '../Utils/notification_service.dart';
 import '../Widgets/background.dart';
 import '../Widgets/profile_image.dart';
 import '../Widgets/screen_background.dart';
@@ -22,6 +26,39 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    var profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getOrders(profileProvider);
+    });
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        profileProvider.getReview(context);
+      }
+    });
+  }
+
+  getOrders(ProfileProvider data) {
+    data.reviewData = [];
+    data.reviewLoading = false;
+    data.reviewHashMoreData = true;
+    data.reviewCurrentPage = 1;
+    data.getReview(context);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer3<AuthProvider, MapProvider, CommonProvider>(
@@ -33,6 +70,7 @@ class _ProfileState extends State<Profile> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SingleChildScrollView(
+            controller: scrollController,
             child: Column(
               children: [
                 Stack(
@@ -46,16 +84,19 @@ class _ProfileState extends State<Profile> {
                           children: [
                             GestureDetector(
                                 onTap: () async {
+                                  NotificationServices notificationServices =
+                                      NotificationServices();
                                   var authProvider = Provider.of<AuthProvider>(
                                       context,
                                       listen: false);
-                                  Future<String> empty = Future.value("");
+                                  final fcmToken =
+                                      notificationServices.getDeviceToken();
 
-                                  authProvider.updateFcmToken(context, empty,
+                                  authProvider.updateFcmToken(context, fcmToken,
                                       callBack: () {
                                     token = "";
                                     commonProvider.setToken = "";
-                                  });
+                                  }, param: "remove");
 
                                   pushReplaceAuth(context, LoginScreen());
                                 },
@@ -157,15 +198,28 @@ class _ProfileState extends State<Profile> {
                               color: black,
                               fontWeight: FontWeight.bold),
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 5,
-                          padding: EdgeInsets.only(top: 10),
-                          itemBuilder: (context, index) {
-                            return ReviewCard();
-                          },
-                        )
+                        Consumer<ProfileProvider>(
+                            builder: (context, profileProvider, child) {
+                          if (profileProvider.reviewLoading &&
+                              profileProvider.reviewData.isEmpty) {
+                            return ShimmerCard(
+                              widht: double.infinity,
+                              height: 190,
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: profileProvider.reviewData.length,
+                            padding: EdgeInsets.only(top: 10),
+                            itemBuilder: (context, index) {
+                              return ReviewCard(
+                                  reviewData:
+                                      profileProvider.reviewData[index]);
+                            },
+                          );
+                        })
                       ],
                     ),
                   ],

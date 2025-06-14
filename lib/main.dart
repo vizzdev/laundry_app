@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:laundry_app_laundry/Profile/profile_provider.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
@@ -53,6 +54,9 @@ class _MainAppState extends State<MainApp> {
         ),
         ChangeNotifierProvider<OrderProvider>(
           create: ((context) => OrderProvider()),
+        ),
+        ChangeNotifierProvider<ProfileProvider>(
+          create: ((context) => ProfileProvider()),
         ),
       ],
       child: MaterialApp(

@@ -135,11 +135,11 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  updateFcmToken(BuildContext context, Future<String> token, {callBack = defaultCallBack}) async {
+  updateFcmToken(BuildContext context, Future<String> token, {callBack = defaultCallBack, param = ""}) async {
     try {
       var body = {"token": await token};
 
-      Response response = await patchCall("users/updateToken", body);
+      Response response = await patchCall("users/updateToken?value=${param}", body);
 
       if (response.statusCode == 200) {
         print("reponse ${response.body}");

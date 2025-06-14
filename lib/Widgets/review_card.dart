@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app_laundry/Modela/review_model.dart';
 
 import '../Utils/colors.dart';
 import '../Utils/helpers.dart';
 
 class ReviewCard extends StatelessWidget {
-  const ReviewCard({super.key});
+  final ReviewData reviewData;
+  const ReviewCard({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class ReviewCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(width: 1, color: green8f)),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
                 children: [
@@ -25,12 +28,20 @@ class ReviewCard extends StatelessWidget {
                         height: 40,
                         width: 40,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: Image.asset(getImg("img.jpg"), fit: BoxFit.cover),
-                        ),
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.network(
+                              getImg(reviewData.senderId?.profileImage ?? ""),
+                              fit: BoxFit.cover,
+                              height: 40,
+                              width: 40,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(getImg("profile.png"),
+                                    fit: BoxFit.cover, height: 40, width: 40);
+                              },
+                            )),
                       ),
                       SizedBox(width: 10),
-                      Text("Haseeb",
+                      Text(reviewData.senderId?.name ?? "",
                           style: TextStyle(
                               fontSize: 14,
                               color: black,
@@ -39,7 +50,7 @@ class ReviewCard extends StatelessWidget {
                   ),
                   Positioned(
                     right: 0,
-                    child: Text("4.8⭐",
+                    child: Text("${reviewData.rating.toDouble()}⭐",
                         style: TextStyle(
                             fontSize: 14,
                             color: black,
@@ -50,8 +61,7 @@ class ReviewCard extends StatelessWidget {
               SizedBox(height: 5),
               Divider(color: greybd),
               SizedBox(height: 10),
-              Text(
-                  "Amazing service! My clothes came back fresh, clean, and neatly folded. The pickup and delivery were right on time. Highly recommend!")
+              Text(reviewData.review)
             ],
           ),
         ),

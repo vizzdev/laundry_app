@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/notifications.dart';
 import 'package:laundry_app_laundry/Screens/Orders/orders.dart';
-import 'package:laundry_app_laundry/Screens/profile.dart';
+import 'package:laundry_app_laundry/Profile/profile.dart';
 import 'package:laundry_app_laundry/Screens/request_screen.dart';
 import 'package:laundry_app_laundry/Utils/notification_service.dart';
 import 'package:provider/provider.dart';

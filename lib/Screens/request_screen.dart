@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_shimmer.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
+import 'package:laundry_app_laundry/Utils/helpers.dart';
 import 'package:laundry_app_laundry/Widgets/background.dart';
 import 'package:laundry_app_laundry/Widgets/request_card.dart';
 import 'package:laundry_app_laundry/Widgets/screen_background.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -68,7 +70,10 @@ class _RequestScreenState extends State<RequestScreen> {
                 }
 
                 return orderData.orderRequestData.isEmpty
-                    ? Expanded(child: Center(child: Text("no requests found")))
+                    ? Expanded(child: Center(child: Padding(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      child: Lottie.asset(getImg("waiting.json")),
+                    )))
                     : Expanded(
                       child: VisibilityDetector(
                           onVisibilityChanged: (info) {
