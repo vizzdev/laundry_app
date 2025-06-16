@@ -188,6 +188,9 @@ class NotificationServices {
       if (type == "requests") {
         pushAuth(context, MainPage(index: 0));
       }
+      if (type == "order") {
+        pushAuth(context, MainPage(index: 1));
+      }
     } catch (e) {
       print(e);
     }

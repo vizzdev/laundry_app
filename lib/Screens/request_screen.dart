@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_app_laundry/Screens/Auth/auth_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_shimmer.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
@@ -23,10 +24,13 @@ class _RequestScreenState extends State<RequestScreen> {
   @override
   void initState() {
     super.initState();
+
     scrollController = ScrollController();
     var orderProvider = Provider.of<OrderProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getRequests(orderProvider);
+      Future.delayed((Duration(seconds: 1)), () {
+        getRequests(orderProvider);
+      });
     });
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
@@ -37,6 +41,7 @@ class _RequestScreenState extends State<RequestScreen> {
   }
 
   getRequests(OrderProvider data) {
+    print("i am in requests");
     data.orderRequestData = [];
     data.orderRequestLoading = false;
     data.orderRequestHashMoreData = true;
@@ -70,15 +75,17 @@ class _RequestScreenState extends State<RequestScreen> {
                 }
 
                 return orderData.orderRequestData.isEmpty
-                    ? Expanded(child: Center(child: Padding(
-                      padding: const EdgeInsets.only(bottom: 100),
-                      child: Lottie.asset(getImg("waiting.json")),
-                    )))
+                    ? Expanded(
+                        child: Center(
+                            child: Padding(
+                        padding: const EdgeInsets.only(bottom: 100),
+                        child: Lottie.asset(getImg("waiting.json")),
+                      )))
                     : Expanded(
-                      child: VisibilityDetector(
+                        child: VisibilityDetector(
                           onVisibilityChanged: (info) {
                             print("info...${info}");
-                      
+
                             var visiblePercentage = info.visibleFraction * 100;
                             if (visiblePercentage > 80.0) {
                               orderData.setScreenVisibility = 1;
@@ -115,7 +122,7 @@ class _RequestScreenState extends State<RequestScreen> {
                             },
                           ),
                         ),
-                    );
+                      );
               }),
             ],
           )),

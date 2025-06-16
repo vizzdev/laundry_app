@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_detail.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_shimmer.dart';
+import 'package:laundry_app_laundry/Utils/colors.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../Utils/helpers.dart';
@@ -74,24 +75,33 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                   ))
                 : Expanded(
+                  child: RefreshIndicator(
+                    color: green8f,
+                    onRefresh: () async {
+                        getOrders(orderdata);
+                      },
                     child: ListView.builder(
-                        padding: EdgeInsets.only(top: 50, bottom: 70),
-                        itemCount: orderdata.orderData.length,
-                        itemBuilder: (context, index) {
-                          return OrderCard(
-                            orderData: orderdata.orderData[index],
-                            onpressed: () {
-                              pushAuth(
-                                  context,
-                                  OrderDetail(
-                                      orderData: orderdata.orderData[index]),
-                                  callBack: () {
+                          padding: EdgeInsets.only(top: 50, bottom: 70),
+                          itemCount: orderdata.orderData.length,
+                          itemBuilder: (context, index) {
+                            return OrderCard(
+                              callback: () {
                                 orderdata.getOrders(context);
-                              });
-                            },
-                          );
-                        }),
-                  );
+                              },
+                              orderData: orderdata.orderData[index],
+                              onpressed: () {
+                                pushAuth(
+                                    context,
+                                    OrderDetail(
+                                        orderData: orderdata.orderData[index]),
+                                    callBack: () {
+                                  orderdata.getOrders(context);
+                                });
+                              },
+                            );
+                          }),
+                  ),
+                );
           }),
         ],
       ),

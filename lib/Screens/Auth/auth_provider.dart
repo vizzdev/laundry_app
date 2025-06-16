@@ -43,12 +43,14 @@ class AuthProvider extends ChangeNotifier {
 
       Response response = await postCall("auth", body);
       UserModel userModel = UserModel.fromJson(jsonDecode(response.body));
+      print("resposseee ${response.body}");
       CommonProvider commonProvider =
           Provider.of<CommonProvider>(context, listen: false);
       if (userModel.data?.role == 1 || userModel.data?.role == 2) {
         showErrorBar(context, "User not found");
         Navigator.pop(context);
       } else if (response.statusCode == 200) {
+        token = userModel.data?.token ?? "";
         commonProvider.setToken = userModel.data?.token ?? "";
         commonProvider.setUserId = userModel.data?.id ?? "";
         Userdata user = userdatahelper;
@@ -57,6 +59,8 @@ class AuthProvider extends ChangeNotifier {
         user.address = userModel.data?.address ?? "";
         user.location = userModel.data?.location;
         user.profileImage = userModel.data!.profileImage;
+        user.rating = userModel.data?.rating ?? 0;
+        user.orders = userModel.data?.orders ?? 0;
         userdata = userdatahelper;
         notifyListeners();
         Navigator.pop(context);
@@ -108,6 +112,7 @@ class AuthProvider extends ChangeNotifier {
       UserModel userModel = UserModel.fromJson(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
+        token = userModel.data?.token ?? "";
         commonProvider.setToken = userModel.data?.token ?? "";
         commonProvider.setUserId = userModel.data?.id ?? "";
         Userdata user = userdatahelper;
@@ -116,6 +121,8 @@ class AuthProvider extends ChangeNotifier {
         user.profileImage = userModel.data!.profileImage;
         user.address = userModel.data?.address ?? "";
         user.location = userModel.data?.location;
+        user.rating = userModel.data?.rating ?? 0;
+        user.orders = userModel.data?.orders ?? 0;
         userdata = userdatahelper;
         notifyListeners();
         Navigator.pop(context);
@@ -135,11 +142,13 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  updateFcmToken(BuildContext context, Future<String> token, {callBack = defaultCallBack, param = ""}) async {
+  updateFcmToken(BuildContext context, Future<String> token,
+      {callBack = defaultCallBack, param = ""}) async {
     try {
       var body = {"token": await token};
 
-      Response response = await patchCall("users/updateToken?value=${param}", body);
+      Response response =
+          await patchCall("users/updateToken?value=${param}", body);
 
       if (response.statusCode == 200) {
         print("reponse ${response.body}");
@@ -154,8 +163,10 @@ class AuthProvider extends ChangeNotifier {
 
   getUser(BuildContext context, String id) {
     getCall("users", "?id=$id").then((response) {
+      print("response body ${response.body}");
       GetUsersModel usersModel =
           GetUsersModel.fromJson(jsonDecode(response.body));
+
       if (response.statusCode == 200) {
         Userdata user = userdatahelper;
         user.name = usersModel.data.first.name;
@@ -163,6 +174,8 @@ class AuthProvider extends ChangeNotifier {
         user.profileImage = usersModel.data.first.profileImage;
         user.address = usersModel.data.first.address;
         user.location = usersModel.data.first.location;
+        user.rating = usersModel.data.first.rating;
+        user.orders = usersModel.data.first.orders;
         userdata = userdatahelper;
         notifyListeners();
       } else {}

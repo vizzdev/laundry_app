@@ -30,7 +30,7 @@ class ReviewCard extends StatelessWidget {
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(25),
                             child: Image.network(
-                              getImg(reviewData.senderId?.profileImage ?? ""),
+                              netImg(reviewData.senderId?.profileImage ?? ""),
                               fit: BoxFit.cover,
                               height: 40,
                               width: 40,

@@ -86,7 +86,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(25),
                             child: Image.network(
-                              getImg(
+                              netImg(
                                   widget.orderData.orderBy?.profileImage ?? ""),
                               fit: BoxFit.cover,
                               height: 50,

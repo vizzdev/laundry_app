@@ -47,7 +47,7 @@ class _RequestCardState extends State<RequestCard> {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(25),
                         child: Image.network(
-                          getImg(widget.orderdata?.orderBy?.profileImage ?? ""),
+                          netImg(widget.orderdata?.orderBy?.profileImage ?? ""),
                           fit: BoxFit.cover,
                           height: 50,
                           width: 50,

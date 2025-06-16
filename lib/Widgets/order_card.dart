@@ -9,8 +9,12 @@ import '../Utils/helpers.dart';
 class OrderCard extends StatefulWidget {
   final VoidCallback onpressed;
   final OrderData orderData;
+  final VoidCallback callback;
   const OrderCard(
-      {super.key, this.onpressed = defaultCallBack, required this.orderData});
+      {super.key,
+      this.onpressed = defaultCallBack,
+      required this.orderData,
+      this.callback = defaultCallBack});
 
   @override
   State<OrderCard> createState() => _OrderCardState();
@@ -90,17 +94,30 @@ class _OrderCardState extends State<OrderCard> {
                     rightFontSize: 18.0,
                     rightTextColor: red),
                 SizedBox(height: 10),
-                Button(
-                  text: "Update Invoice",
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return UpdateInvoiceSheet();
-                      },
-                    );
-                  },
-                )
+                if (widget.orderData.status == "confirmed" ||
+                    widget.orderData.status == "in=progress")
+                  Button(
+                    text: widget.orderData.invoiceRequest?.price != ""
+                        ? "invoice sent"
+                        : "Update Invoice",
+                    onTap: () {
+                      if (widget.orderData.invoiceRequest?.price != "") {
+                        showErrorBar(context, "you already send a request");
+                      } else {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return UpdateInvoiceSheet(
+                                orderData: widget.orderData);
+                          },
+                        ).whenComplete(
+                          () {
+                            widget.callback();
+                          },
+                        );
+                      }
+                    },
+                  )
               ],
             ),
           ),
@@ -149,24 +166,26 @@ class _OrderCardState extends State<OrderCard> {
   }
 
   Color getStatusColor(String status) {
-  switch (status.toLowerCase()) {
-    case 'pending':
-      return Colors.orange;
-    case 'confirmed':
-      return Colors.blue;
-    case 'in-progress':
-      return Colors.amber;
-    case 'delivered':
-      return Colors.teal;
-    case 'received':
-      return Colors.green;
-    case 'reviewed':
-      return Colors.deepOrange;    
-    case 'cancel':
-      return Colors.red;
-    default:
-      return Colors.grey;
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return Colors.orange;
+      case 'confirmed':
+        return Colors.blue;
+      case 'in-progress':
+        return Colors.amber;
+      case 'delivered':
+        return Colors.teal;
+      case 'received':
+        return Colors.green;
+      case 'reviewed':
+        return Colors.deepOrange;
+      case 'cancel':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
-}
-String capitalize(String s) => s.isNotEmpty ? '${s[0].toUpperCase()}${s.substring(1)}' : s;
+
+  String capitalize(String s) =>
+      s.isNotEmpty ? '${s[0].toUpperCase()}${s.substring(1)}' : s;
 }

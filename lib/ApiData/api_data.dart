@@ -4,8 +4,7 @@ import 'package:http/http.dart';
 
 import '../Utils/helpers.dart';
 
-final baseurl =
-    "https://599d-2407-aa80-314-b27b-5d53-5b05-ab38-326e.ngrok-free.app/api/";
+final baseurl = "http://51.21.132.147/api/";
 
 Future<Response> postCall(String endpoints, Map<String, dynamic> body) async {
   print("gggg${baseurl + endpoints}");

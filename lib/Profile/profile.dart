@@ -10,7 +10,6 @@ import 'package:laundry_app_laundry/Widgets/review_card.dart';
 import 'package:laundry_app_laundry/Widgets/shimmer_card.dart';
 import 'package:laundry_app_laundry/edit_profile.dart';
 import 'package:provider/provider.dart';
-import '../Screens/Orders/order_shimmer.dart';
 import '../Utils/colors.dart';
 import '../Utils/helpers.dart';
 import '../Utils/notification_service.dart';

@@ -45,15 +45,23 @@ class _ProfileImageState extends State<ProfileImage> {
                 child: Image.file(
                   File(widget.imagepath),
                   fit: BoxFit.cover,
+                  height: widget.height,
+                  width: widget.width,
                 ))
             : widget.networkImage != ""
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(widget.radius),
                     child: Image.network(
-                      widget.networkImage,
+                      netImg(widget.networkImage),
+                      height: widget.height,
+                      width: widget.width,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(getImg("laundry_logo.png"));
+                        return Image.asset(
+                          getImg("laundry_logo.png"),
+                          height: widget.height,
+                          width: widget.width,
+                        );
                       },
                     ))
                 : Icon(Icons.add_a_photo_outlined, color: green8f, size: 30),

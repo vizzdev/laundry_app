@@ -11,6 +11,10 @@ getImg(String img) {
   return "assets/images/$img";
 }
 
+netImg(String img) {
+  return "http://51.21.132.147/$img";
+}
+
 pushAuth(BuildContext context, Widget route,
     {Function callBack = defaultCallBack}) {
   return Navigator.push(context,

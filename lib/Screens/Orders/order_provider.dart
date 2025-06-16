@@ -82,9 +82,11 @@ class OrderProvider extends ChangeNotifier {
 
   updateOrder(BuildContext context, Map<String, dynamic> body, String orderId,
       String message,
-      {callback = defaultCallBack}) async {
+      {callback = defaultCallBack, updateInvoice = false}) async {
     LoadingStack().show(context);
-    Response response = await patchCall("orders/$orderId", body);
+    Response response = updateInvoice
+        ? await patchCall("orders?id=$orderId", body)
+        : await patchCall("orders/$orderId", body);
     SingleOrderModel ordersModel =
         SingleOrderModel.fromJson(jsonDecode(response.body));
     if (response.statusCode == 200) {
@@ -105,7 +107,7 @@ class OrderProvider extends ChangeNotifier {
   bool orderRequestHashMoreData = true;
   int orderRequestCurrentPage = 1;
 
-  Future<void> getOrdersRequest(BuildContext context) async {
+  Future<void> getOrdersRequest(BuildContext context,) async {
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (orderRequestLoading || !orderRequestHashMoreData) return;
 
