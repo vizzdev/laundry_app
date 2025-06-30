@@ -108,8 +108,8 @@ class NotificationServices {
          var orderData = jsonDecode(message.data['orderData']);
         if (orderData["_id"] == orderProvider.orderid) {
           print("i am innnnnnnnn");
-          if (orderData["status"] == "received") {
-            orderProvider.setOrderStatus = "received";
+          if (orderData["status"] == "completed") {
+            orderProvider.setOrderStatus = "completed";
             orderProvider.setProceedOrderButtonText(context, "");
             showSuccessBar(context, "Congratulation your order is completed");
           }

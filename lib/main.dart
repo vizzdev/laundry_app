@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Profile/profile_provider.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
+import 'package:laundry_app_laundry/Screens/Settings/setting_provider.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
 import 'package:laundry_app_laundry/Utils/notification_service.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +58,9 @@ class _MainAppState extends State<MainApp> {
         ),
         ChangeNotifierProvider<ProfileProvider>(
           create: ((context) => ProfileProvider()),
+        ),
+         ChangeNotifierProvider<SettingProvider>(
+          create: ((context) => SettingProvider()),
         ),
       ],
       child: MaterialApp(

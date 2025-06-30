@@ -82,33 +82,37 @@ class _OrderCardState extends State<OrderCard> {
                 Divider(color: greybd),
                 SizedBox(height: 10),
                 detailRow(
-                    lefttext: "Sub Total",
-                    rightText: "\$${widget.orderData.invoice}"),
-                detailRow(lefttext: "Discount", rightText: "\$0.0"),
-                SizedBox(height: 10),
-                detailRow(
-                    lefttext: "Total",
-                    rightText: "\$${widget.orderData.invoice}",
-                    leftFontSize: 18.0,
+                    leftTextColor: black,
+                    lefttext: "Amount",
+                    rightText:
+                        widget.orderData.invoice - widget.orderData.upfront == 0 ? "Paid" : "\$${widget.orderData.invoice - widget.orderData.upfront}",
+                    leftFontSize: 16.0,
                     leftFontWeight: FontWeight.bold,
                     rightFontSize: 18.0,
-                    rightTextColor: red),
+                    rightTextColor: black),
                 SizedBox(height: 10),
                 if (widget.orderData.status == "confirmed" ||
                     widget.orderData.status == "in=progress")
                   Button(
-                    text: widget.orderData.invoiceRequest?.price != ""
+                    text: widget.orderData.invoiceRequest?.price != 0
                         ? "invoice sent"
                         : "Update Invoice",
                     onTap: () {
-                      if (widget.orderData.invoiceRequest?.price != "") {
+                      if (widget.orderData.invoiceRequest?.price != 0) {
                         showErrorBar(context, "you already send a request");
                       } else {
                         showModalBottomSheet(
+                          isScrollControlled: true,
                           context: context,
                           builder: (context) {
-                            return UpdateInvoiceSheet(
-                                orderData: widget.orderData);
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              child: UpdateInvoiceSheet(
+                                  orderData: widget.orderData),
+                            );
                           },
                         ).whenComplete(
                           () {
@@ -131,6 +135,7 @@ class _OrderCardState extends State<OrderCard> {
       {lefttext = "LeftText",
       rightText = "RightText",
       rightTextColor = black,
+      leftTextColor = black,
       leftFontWeight = FontWeight.w500,
       leftFontSize = 14.0,
       rightFontSize = 14.0}) {
@@ -143,7 +148,7 @@ class _OrderCardState extends State<OrderCard> {
               lefttext,
               style: TextStyle(
                   fontSize: leftFontSize,
-                  color: black,
+                  color: leftTextColor,
                   fontWeight: leftFontWeight),
             )),
             SizedBox(width: 5),
@@ -175,7 +180,7 @@ class _OrderCardState extends State<OrderCard> {
         return Colors.amber;
       case 'delivered':
         return Colors.teal;
-      case 'received':
+      case 'completed':
         return Colors.green;
       case 'reviewed':
         return Colors.deepOrange;

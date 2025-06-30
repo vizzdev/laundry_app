@@ -121,7 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           rightIcon: "eye.svg",
                           obscureText: auth.obscureText,
                           controller: password,
-                          maxline: 1,
+                          maxLines: 1,
                         ),
                         SizedBox(height: 20),
                         InputField(
@@ -138,7 +138,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           rightIcon: "eye.svg",
                           obscureText: auth.obscureText,
                           controller: conFirmPassword,
-                          maxline: 1,
+                          maxLines: 1,
                         ),
                       ],
                     );

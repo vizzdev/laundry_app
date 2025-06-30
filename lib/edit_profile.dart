@@ -41,7 +41,9 @@ class _EditProfileState extends State<EditProfile> {
 
     location = LatLng(widget.data.location?.coordinates.last ?? 0,
         widget.data.location?.coordinates.first ?? 0);
-    mapProvider.setlaundryLocation = location;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mapProvider.setlaundryLocation = location;
+    });
 
     setState(() {});
   }

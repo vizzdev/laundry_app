@@ -139,4 +139,5 @@ Userdata userdatahelper = Userdata(
     v: 0,
     token: '',
     deviceToken: [],
-    location: Location(type: "Point", coordinates: []));
+    location: Location(type: "Point", coordinates: []),
+    wallet: 0);

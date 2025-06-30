@@ -22,15 +22,16 @@ class _UpdateInvoiceSheetState extends State<UpdateInvoiceSheet> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    price.text = widget.orderData.invoice;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Background(
-      resizableBottomInsert: true,
-      backgroundColor: Colors.transparent,
-      body: Container(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).focusedChild?.unfocus();
+      },
+      child: Container(
+        height: 400,
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
@@ -40,7 +41,6 @@ class _UpdateInvoiceSheetState extends State<UpdateInvoiceSheet> {
                 child: Column(
                   children: [
                     SizedBox(height: 20),
-                    SizedBox(height: 10),
                     InputField(
                       controller: price,
                       title: "Price",
@@ -52,7 +52,7 @@ class _UpdateInvoiceSheetState extends State<UpdateInvoiceSheet> {
                       controller: reason,
                       title: "Reason",
                       hintText: "Add a reason",
-                      maxline: 4,
+                      maxLines: 4,
                     ),
                     SizedBox(height: 20),
                     Consumer<OrderProvider>(
@@ -70,6 +70,7 @@ class _UpdateInvoiceSheetState extends State<UpdateInvoiceSheet> {
                               "Invoice updated successfully",
                               updateInvoice: true, callback: () {
                             Navigator.pop(context);
+      
                           });
                         },
                       );

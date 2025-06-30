@@ -23,7 +23,7 @@ class _OrderDetailState extends State<OrderDetail> {
     "Confirm",
     "In-Progress",
     "Delivered",
-    "Received"
+    "Completed"
   ];
 
   @override
@@ -156,7 +156,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   SizedBox(height: 60),
                   Consumer<OrderProvider>(builder: (context, data, child) {
                     return data.orderStatus != "reviewed" &&
-                            data.orderStatus != "received"
+                            data.orderStatus != "completed"
                         ? Button(
                             text: data.proceedOrderButtonText,
                             onTap: () {
@@ -252,7 +252,7 @@ class _OrderDetailState extends State<OrderDetail> {
         return 2;
       case 'delivered':
         return 3;
-      case 'received':
+      case 'completed':
         return 4;
       case 'reviewed':
         return 4;

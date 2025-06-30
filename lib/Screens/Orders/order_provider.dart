@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:laundry_app_laundry/Screens/Auth/auth_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/get_orders_model.dart';
 import 'package:laundry_app_laundry/Screens/Orders/single_order_model.dart';
 import 'package:laundry_app_laundry/Utils/helpers.dart';
@@ -62,10 +61,16 @@ class OrderProvider extends ChangeNotifier {
         }
       case "delivered":
         {
-          proceedOrderButtonText = "Waiting";
+          proceedOrderButtonText = "complete";
+          if (orderId != "") {
+            updateOrder(context, {"status": "completed"}, orderId,
+                "Order completed SuccessFully",
+                callback: () {});
+          }
+
           break;
         }
-      case "received":
+      case "completed":
         {
           proceedOrderButtonText = "Add Review";
           break;
@@ -98,6 +103,7 @@ class OrderProvider extends ChangeNotifier {
       callback();
     } else {
       showErrorBar(context, "Please try again");
+      print("response ${response.body}");
       Navigator.pop(context);
     }
   }
@@ -107,15 +113,16 @@ class OrderProvider extends ChangeNotifier {
   bool orderRequestHashMoreData = true;
   int orderRequestCurrentPage = 1;
 
-  Future<void> getOrdersRequest(BuildContext context,) async {
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+  Future<void> getOrdersRequest(
+    BuildContext context,
+  ) async {
     if (orderRequestLoading || !orderRequestHashMoreData) return;
 
     orderRequestLoading = true;
     notifyListeners();
     try {
-      Response response = await getCall("orders",
-          "?page=$orderRequestCurrentPage&lat=${authProvider.userdata.location?.coordinates.last}&lng=${authProvider.userdata.location?.coordinates.first}");
+      Response response = await getCall(
+          "orders", "?page=$orderRequestCurrentPage&status=pending");
 
       print(response.body);
       GetOrdersModel ordersModel =

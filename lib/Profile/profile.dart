@@ -65,6 +65,7 @@ class _ProfileState extends State<Profile> {
       return Background(
           body: Center(
               child: ScreenBackground(
+        showRightIcon: true,
         text: "Profile",
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -207,17 +208,19 @@ class _ProfileState extends State<Profile> {
                             );
                           }
 
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: profileProvider.reviewData.length,
-                            padding: EdgeInsets.only(top: 10),
-                            itemBuilder: (context, index) {
-                              return ReviewCard(
-                                  reviewData:
-                                      profileProvider.reviewData[index]);
-                            },
-                          );
+                          return profileProvider.reviewData.isEmpty
+                              ? Center(child: Text("no reviews yet"))
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: profileProvider.reviewData.length,
+                                  padding: EdgeInsets.only(top: 10),
+                                  itemBuilder: (context, index) {
+                                    return ReviewCard(
+                                        reviewData:
+                                            profileProvider.reviewData[index]);
+                                  },
+                                );
                         })
                       ],
                     ),

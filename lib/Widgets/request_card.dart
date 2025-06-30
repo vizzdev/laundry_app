@@ -87,9 +87,10 @@ class _RequestCardState extends State<RequestCard> {
                   lefttext: "Address",
                   rightText: widget.orderdata?.dropoffLocation),
               detailRow(
-                  lefttext: "Total",
-                  rightText: "\$${widget.orderdata?.invoice}",
-                  rightTextColor: red),
+                  rightTextColor: black,
+                  lefttext: "Amount",
+                  rightText:
+                      "\$${widget.orderdata!.invoice - widget.orderdata!.upfront}"),
               SizedBox(height: 10),
               Row(
                 children: [

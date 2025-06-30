@@ -65,7 +65,7 @@ TextEditingController password = TextEditingController();
                       rightIcon: "eye.svg",
                       controller: password,
                       obscureText: auth.obscureText,
-                      maxline: 1,
+                      maxLines: 1,
                     );
                   }),
                   SizedBox(height: 30),

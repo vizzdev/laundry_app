@@ -28,7 +28,8 @@ class AuthProvider extends ChangeNotifier {
       v: 0,
       token: '',
       deviceToken: [],
-      location: Location(type: "Point", coordinates: []));
+      location: Location(type: "Point", coordinates: []),
+      wallet: 0);
 
   set setobscureText(bool value) {
     obscureText = value;
@@ -61,6 +62,7 @@ class AuthProvider extends ChangeNotifier {
         user.profileImage = userModel.data!.profileImage;
         user.rating = userModel.data?.rating ?? 0;
         user.orders = userModel.data?.orders ?? 0;
+        user.wallet = userModel.data?.wallet ?? 0;
         userdata = userdatahelper;
         notifyListeners();
         Navigator.pop(context);
@@ -123,6 +125,7 @@ class AuthProvider extends ChangeNotifier {
         user.location = userModel.data?.location;
         user.rating = userModel.data?.rating ?? 0;
         user.orders = userModel.data?.orders ?? 0;
+        user.wallet = userModel.data?.wallet ?? 0;
         userdata = userdatahelper;
         notifyListeners();
         Navigator.pop(context);
@@ -176,6 +179,7 @@ class AuthProvider extends ChangeNotifier {
         user.location = usersModel.data.first.location;
         user.rating = usersModel.data.first.rating;
         user.orders = usersModel.data.first.orders;
+        user.wallet = usersModel.data.first.wallet;
         userdata = userdatahelper;
         notifyListeners();
       } else {}

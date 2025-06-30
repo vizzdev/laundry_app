@@ -26,7 +26,7 @@ class SingleUSerData {
     required this.status,
     required this.orderBy,
     required this.receivedBy,
-    required this.category, 
+    required this.category,
     required this.pickupLocation,
     required this.pickupDatetime,
     required this.dropoffLocation,
@@ -34,6 +34,7 @@ class SingleUSerData {
     required this.selectedLaundries,
     required this.weight,
     required this.invoice,
+    required this.upfront,
     required this.createdAt,
     required this.updatedAt,
     required this.v,
@@ -52,7 +53,8 @@ class SingleUSerData {
   final String dropoffDatetime;
   final List<dynamic> selectedLaundries;
   final double weight;
-  final String invoice;
+  final int invoice;
+  final int upfront;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int v;
@@ -82,7 +84,8 @@ class SingleUSerData {
           : (json["weight"] is double)
               ? json["weight"]
               : 0.0,
-      invoice: json["invoice"] ?? "",
+      invoice: json["invoice"] ?? 0,
+      upfront: json["upfront"] ?? 0,
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
       v: json["__v"] ?? 0,
