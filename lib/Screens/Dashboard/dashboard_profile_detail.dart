@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/helpers.dart';
 import '../Google Maps/maps.dart';
-import '../notifications.dart';
+import '../Notifications/notifications.dart';
 
 class DashboardProfileDetail extends StatefulWidget {
   const DashboardProfileDetail({super.key});

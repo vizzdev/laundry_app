@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_app_laundry/Screens/Auth/auth_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_shimmer.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';

@@ -24,11 +24,7 @@ class _SettingState extends State<Setting> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
-    var commonProvider = Provider.of<CommonProvider>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      authProvider.getUser(context, commonProvider.userId);
-    });
+   
   }
 
   @override

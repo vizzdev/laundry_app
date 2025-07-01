@@ -31,6 +31,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set setProceedButton(String value) {
+    proceedOrderButtonText = value;
+    notifyListeners();
+  }
+
   void setProceedOrderButtonText(BuildContext context, String orderId) {
     switch (orderStatus) {
       case "confirmed":
@@ -61,11 +66,14 @@ class OrderProvider extends ChangeNotifier {
         }
       case "delivered":
         {
-          proceedOrderButtonText = "complete";
-          if (orderId != "") {
-            updateOrder(context, {"status": "completed"}, orderId,
-                "Order completed SuccessFully",
-                callback: () {});
+          if (proceedOrderButtonText != "complete") {
+            proceedOrderButtonText = "Waiting";
+          } else {
+            if (orderId != "") {
+              updateOrder(context, {"status": "completed"}, orderId,
+                  "Order completed SuccessFully",
+                  callback: () {});
+            }
           }
 
           break;

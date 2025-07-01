@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_app_laundry/Screens/notifications.dart';
+import 'package:laundry_app_laundry/Screens/Notifications/notifications.dart';
 import 'package:laundry_app_laundry/Screens/Orders/orders.dart';
 import 'package:laundry_app_laundry/Profile/profile.dart';
 import 'package:laundry_app_laundry/Screens/request_screen.dart';

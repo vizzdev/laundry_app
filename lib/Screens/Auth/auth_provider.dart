@@ -164,6 +164,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+ 
   getUser(BuildContext context, String id) {
     getCall("users", "?id=$id").then((response) {
       print("response body ${response.body}");

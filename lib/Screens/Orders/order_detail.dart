@@ -33,8 +33,12 @@ class _OrderDetailState extends State<OrderDetail> {
     var orderProvider = Provider.of<OrderProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       orderProvider.setOrderStatus = widget.orderData.status;
-      orderProvider.setProceedOrderButtonText(context, "");
-      orderProvider.setOrderId = widget.orderData.id;
+      if (widget.orderData.upfront == widget.orderData.invoice) {
+        orderProvider.setProceedButton = "complete";
+      } else {
+        orderProvider.setProceedOrderButtonText(context, "");
+        orderProvider.setOrderId = widget.orderData.id;
+      }
     });
   }
 

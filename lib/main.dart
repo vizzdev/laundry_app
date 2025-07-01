@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:laundry_app_laundry/Profile/profile_provider.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
+import 'package:laundry_app_laundry/Screens/Notifications/notification_provider.dart';
 import 'package:laundry_app_laundry/Screens/Orders/order_provider.dart';
 import 'package:laundry_app_laundry/Screens/Settings/setting_provider.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
@@ -61,6 +62,9 @@ class _MainAppState extends State<MainApp> {
         ),
          ChangeNotifierProvider<SettingProvider>(
           create: ((context) => SettingProvider()),
+        ),
+          ChangeNotifierProvider<NotificationProvider>(
+          create: ((context) => NotificationProvider()),
         ),
       ],
       child: MaterialApp(

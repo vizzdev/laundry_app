@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:laundry_app_laundry/Profile/profile_provider.dart';
 import 'package:laundry_app_laundry/Screens/Auth/auth_provider.dart';
-import 'package:laundry_app_laundry/Screens/Auth/login.dart';
 import 'package:laundry_app_laundry/Screens/Google%20Maps/map_provider.dart';
 import 'package:laundry_app_laundry/Utils/common_provider.dart';
 import 'package:laundry_app_laundry/Widgets/anaytics_card.dart';
@@ -12,7 +10,6 @@ import 'package:laundry_app_laundry/edit_profile.dart';
 import 'package:provider/provider.dart';
 import '../Utils/colors.dart';
 import '../Utils/helpers.dart';
-import '../Utils/notification_service.dart';
 import '../Widgets/background.dart';
 import '../Widgets/profile_image.dart';
 import '../Widgets/screen_background.dart';
@@ -32,8 +29,12 @@ class _ProfileState extends State<Profile> {
     super.initState();
     scrollController = ScrollController();
     var profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var commonProvider = Provider.of<CommonProvider>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getOrders(profileProvider);
+      getReviews(profileProvider);
+      authProvider.getUser(context, commonProvider.userId);
     });
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
@@ -43,7 +44,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  getOrders(ProfileProvider data) {
+  getReviews(ProfileProvider data) {
     data.reviewData = [];
     data.reviewLoading = false;
     data.reviewHashMoreData = true;
@@ -80,47 +81,23 @@ class _ProfileState extends State<Profile> {
                       top: 50,
                       child: Consumer<CommonProvider>(
                           builder: (context, commonProvider, child) {
-                        return Row(
-                          children: [
-                            GestureDetector(
-                                onTap: () async {
-                                  NotificationServices notificationServices =
-                                      NotificationServices();
-                                  var authProvider = Provider.of<AuthProvider>(
-                                      context,
-                                      listen: false);
-                                  final fcmToken =
-                                      notificationServices.getDeviceToken();
-
-                                  authProvider.updateFcmToken(context, fcmToken,
-                                      callBack: () {
-                                    token = "";
-                                    commonProvider.setToken = "";
-                                  }, param: "remove");
-
-                                  pushReplaceAuth(context, LoginScreen());
-                                },
-                                child: SvgPicture.asset(getImg("logout.svg"))),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                pushAuth(context,
-                                    EditProfile(data: authProvider.userdata),
-                                    callBack: () {
-                                  authProvider.getUser(
-                                      context, commonProvider.userId);
-                                });
-                              },
-                              child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: green8f),
-                                  child: Icon(Icons.edit_rounded,
-                                      size: 20, color: white)),
-                            ),
-                          ],
+                        return GestureDetector(
+                          onTap: () {
+                            pushAuth(context,
+                                EditProfile(data: authProvider.userdata),
+                                callBack: () {
+                              authProvider.getUser(
+                                  context, commonProvider.userId);
+                            });
+                          },
+                          child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: green8f),
+                              child: Icon(Icons.edit_rounded,
+                                  size: 20, color: white)),
                         );
                       }),
                     ),
